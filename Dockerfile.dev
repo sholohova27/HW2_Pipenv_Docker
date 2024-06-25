@@ -1,0 +1,25 @@
+FROM ubuntu:20.04
+
+RUN apt update
+RUN apt install -y python3 \
+                   python3-pip
+
+# On Debian/Ubuntu systems, you need to install the python3-venv package using the following command.
+RUN apt install python3.8-venv
+
+# Venv creation
+RUN python3 -m venv my_env
+
+# Venv activating and pip upgrade
+RUN . my_env/bin/activate && pip install --upgrade pip
+
+# Generating of requirements.txt
+RUN . my_env/bin/activate && pip freeze > requirements.txt
+
+# Install Py-dependencies from requirements.txt
+RUN . my_env/bin/activate && pip install --no-cache-dir -r requirements.txt
+
+COPY app /app
+
+ENTRYPOINT ["python", "src_with_classes_MY.py"]
+
